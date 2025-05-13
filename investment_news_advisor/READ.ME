@@ -1,0 +1,100 @@
+# Projeto: Análise de Notícias Financeiras com LLMs
+
+Este projeto utiliza uma arquitetura baseada em grafo com LLMs (via LangChain + LangGraph) para analisar notícias financeiras e gerar recomendações de investimento personalizadas para diferentes perfis de investidores.
+
+## 📂 Estrutura de Pastas
+
+├── data/
+│ └── news.txt # Notícia a ser analisada
+│
+├── outputs/
+│ └── result.txt # Resultado da análise
+│
+├── src/
+│ └── main.py # Script principal da aplicação
+│
+└── README.md # Este arquivo
+
+---
+
+## 🚀 Funcionalidade
+
+A partir de uma notícia textual (`news.txt`) e um tipo de investidor definido (`longo_prazo`, `curto_prazo`, `fora_papel`), o projeto:
+
+1. **Analisa o sentimento** da notícia (otimista, neutro ou pessimista).
+2. **Extrai entidades financeiras** relevantes (empresa, índice, setor).
+3. **(Simula) Obtém preço da ação** da entidade principal.
+4. **Classifica o tipo da notícia** (pontual, estrutural, regulatória, financeira).
+5. **Verifica impacto estimado no preço** com base no sentimento.
+6. **Gera recomendações** para o perfil de investidor definido.
+
+Tudo isso é feito com um fluxo controlado por um grafo de estados usando LangGraph.
+
+---
+
+## 🧠 Requisitos
+
+- Python 3.10+
+- [LangGraph](https://python.langgraph.dev/)
+- [LangChain](https://www.langchain.com/)
+- OpenAI API key (configurada no arquivo `.env`)
+
+▶️ Como executar
+
+# Clone o projeto e instale as dependências
+pip install -r requirements.txt
+
+# Ajuste seu .env com a chave da OpenAI
+
+# Execute o script principal
+python src/main.py
+
+🧠 Grafo de Execução
+
+[INÍCIO]
+   |
+   v
+[analyze_sentiment] ←─ (analisa o sentimento da notícia: otimista / neutro / pessimista)
+   |
+   v
+[extract_entities] ←─ (extrai entidades como empresa, índice, setor, etc.)
+   |
+   +--> Se sentimento == "neutro":
+   |         |
+   |         v
+   |   [neutral_analysis] ←─ (faz ajuste fino: "ligeiramente positiva" ou "ligeiramente negativa")
+   |         |
+   |         v
+   |       [FIM]
+   |
+   +--> Se sentimento == "otimista" ou "pessimista":
+             |
+             v
+    [get_stock_price] ←─ (simula ou obtém preço da ação da empresa principal)
+             |
+             v
+    [classify_news_type] ←─ (classifica a notícia: pontual, estrutural, regulatória, financeira)
+             |
+             v
+    [check_price_movement] ←─ (estima se o preço subiu muito ou caiu muito)
+             |
+             v
+    [generate_recommendations] ←─ (gera recomendações para o perfil de investidor)
+             |
+             v
+           [FIM]
+
+
+📈 Exemplo de Saída
+
+=== RESULTADOS DA ANÁLISE ===
+Sentimento: otimista
+Entidades identificadas:
+- Apple Inc. (empresa, Ticker: AAPL)
+
+Tipo de notícia: estrutural
+Movimento do preço: subiu muito
+
+Recomendações:
+- Manter posição no longo prazo
+- Considerar aumento de exposição com stop técnico
