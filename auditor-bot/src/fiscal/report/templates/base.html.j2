@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ title }}</title>
+<style>
+  :root { --fg:#1c1b19; --muted:#6b675f; --line:#e4e0d8; --bg:#fbfaf7; --card:#fff;
+          --ok:#2f7d4f; --warn:#b7791f; --bad:#b83a3a; --accent:#3b5bdb; }
+  * { box-sizing: border-box; }
+  body { font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--fg);
+         background: var(--bg); margin: 0; padding: 32px 16px; }
+  main { max-width: 960px; margin: 0 auto; }
+  h1 { font-size: 26px; margin: 0 0 4px; }
+  h2 { font-size: 18px; margin: 32px 0 12px; }
+  .sub { color: var(--muted); margin: 0 0 24px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+  .card .k { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+  .card .v { font-size: 26px; font-weight: 650; }
+  .card .s { color: var(--muted); font-size: 13px; }
+  table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--line);
+          border-radius: 10px; overflow: hidden; }
+  th, td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; background: #f6f4ee; }
+  tr:last-child td { border-bottom: 0; }
+  .bar { position: relative; height: 10px; background: #eee9dd; border-radius: 5px; min-width: 120px; }
+  .bar .ci { position: absolute; top: 0; height: 10px; background: #e3b7b7; border-radius: 5px; }
+  .bar .pt { position: absolute; top: -2px; width: 3px; height: 14px; background: var(--bad); border-radius: 2px; }
+  .pill { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+  .critical { background:#f6d5d5; color:#8c1d1d; } .high { background:#fbe3c8; color:#8a4b08; }
+  .medium { background:#fbf0c2; color:#6f5a05; } .low { background:#e4ece4; color:#2f5d3f; }
+  code, .ev { font-family: ui-monospace, Consolas, monospace; font-size: 13px; }
+  .ev { color: #3a3833; }
+  .note { color: var(--muted); font-size: 13px; margin-top: 28px; border-top: 1px solid var(--line); padding-top: 14px; }
+  .num { text-align: right; white-space: nowrap; }
+  @media print { body { background: #fff; padding: 0; } }
+</style>
+</head>
+<body>
+<main>
+{% block content %}{% endblock %}
+<p class="note">Gerado por Fiscal de Bot v{{ version }} em {{ generated }}.
+{% block note %}{% endblock %}</p>
+</main>
+</body>
+</html>

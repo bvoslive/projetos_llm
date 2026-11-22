@@ -1,0 +1,63 @@
+{% extends "base.html.j2" %}
+{% block content %}
+<h1>{{ s.title }}</h1>
+<p class="sub">{{ s.n_audited }} conversas auditadas{% if s.population %} de {{ s.population }}{% endif %}
+ · juiz: <code>{{ s.judge_backend }}</code> · confiança {{ (s.confidence * 100)|round|int }}%</p>
+
+<div class="cards">
+  <div class="card"><div class="k">Conversas com falha</div>
+    <div class="v">{{ pct(s.overall_rate) }}</div>
+    <div class="s">IC {{ pct(s.overall_ci[0]) }} – {{ pct(s.overall_ci[1]) }}</div></div>
+  <div class="card"><div class="k">Com falha</div>
+    <div class="v">{{ s.conversations_with_failure }}</div>
+    <div class="s">de {{ s.n_audited }} auditadas</div></div>
+  <div class="card"><div class="k">Para revisão humana</div>
+    <div class="v">{{ s.needs_review }}</div>
+    <div class="s">achados de baixa confiança</div></div>
+</div>
+
+<h2>Taxa de falha por rubrica</h2>
+<table>
+  <tr><th>Rubrica</th><th class="num">Falhas</th><th class="num">Taxa</th><th>Intervalo de confiança</th></tr>
+  {% for r in s.rubrics %}
+  <tr>
+    <td>{{ r.name }}</td>
+    <td class="num">{{ r.failures }}/{{ r.n }}</td>
+    <td class="num"><b>{{ pct(r.rate) }}</b></td>
+    <td><div class="bar" title="{{ pct(r.ci_low) }} – {{ pct(r.ci_high) }}">
+      <div class="ci" style="left:{{ (r.ci_low*100)|round(1) }}%; width:{{ ((r.ci_high-r.ci_low)*100)|round(1) }}%"></div>
+      <div class="pt" style="left:{{ (r.rate*100)|round(1) }}%"></div></div>
+      <span class="s" style="color:var(--muted);font-size:12px">{{ pct(r.ci_low) }} – {{ pct(r.ci_high) }}</span></td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% if s.by_bot|length > 1 %}
+<h2>Por bot</h2>
+<table>
+  <tr><th>Bot</th><th class="num">Conversas</th><th class="num">Com falha</th></tr>
+  {% for bot, d in s.by_bot.items() %}
+  <tr><td><code>{{ bot }}</code></td><td class="num">{{ d.n|int }}</td><td class="num">{{ pct(d.failure_rate) }}</td></tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+{% if s.examples %}
+<h2>Falhas mais graves</h2>
+<table>
+  <tr><th>Gravidade</th><th>Rubrica</th><th>Conversa</th><th>Evidência</th></tr>
+  {% for e in s.examples %}
+  <tr>
+    <td><span class="pill {{ e.severity.value }}">{{ e.severity.value }}</span></td>
+    <td>{{ e.rubric }}<br><span style="color:var(--muted);font-size:12px">{{ e.source }} · conf. {{ '%.2f'|format(e.confidence) }}</span></td>
+    <td><code>{{ e.conversation_id }}</code></td>
+    <td><span class="ev">{{ e.evidence }}</span><br><span style="color:var(--muted);font-size:13px">{{ e.explanation }}</span></td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+{% endblock %}
+{% block note %}
+Intervalos de Wilson. Dados pessoais foram pseudonimizados antes da análise. Taxas por rubrica contam
+conversas com pelo menos uma falha daquela rubrica.
+{% endblock %}

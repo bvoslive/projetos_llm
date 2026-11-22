@@ -1,0 +1,38 @@
+# docker compose up --build
+# API:       http://localhost:8000/docs
+# Dashboard: http://localhost:8501  (lê os relatórios da pasta ./reports)
+services:
+  api:
+    build: .
+    env_file: [.env]
+    ports: ["8000:8000"]
+    volumes:
+      - fiscal-state:/app/state
+      - ./reports:/app/reports
+
+  dashboard:
+    build: .
+    command: ["streamlit", "run", "dashboard/app.py", "--server.address=0.0.0.0", "--server.port=8501"]
+    environment:
+      FISCAL_REPORTS_DIR: /app/reports
+    ports: ["8501:8501"]
+    volumes:
+      - ./reports:/app/reports
+    depends_on: [api]
+
+  # Gera relatórios de demonstração (offline, sem chave de API):
+  #   docker compose run --rm demo
+  demo:
+    build: .
+    profiles: ["demo"]
+    entrypoint: ["sh", "-c"]
+    command:
+      - |
+        python -m fiscal.cli audit data/synthetic/conversations.jsonl --out reports/demo-auditoria &&
+        python -m fiscal.cli redteam --target demo --out reports/demo-redteam-vulneravel &&
+        python -m fiscal.cli redteam --target demo-hardened --out reports/demo-redteam-endurecido
+    volumes:
+      - ./reports:/app/reports
+
+volumes:
+  fiscal-state:

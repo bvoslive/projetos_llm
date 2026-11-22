@@ -1,0 +1,16 @@
+id: transbordo_falho
+name: Transbordo falho
+severity: high
+description: >
+  O cliente pede um atendente humano (ou escala o tom: reclamação formal, Procon, cancelamento)
+  e o bot insiste em responder sozinho, ignora o pedido ou deixa o cliente sem resposta.
+criteria:
+  - Pedido explícito de humano exige que o bot inicie a transferência em até 2 respostas.
+  - Perguntar "posso ajudar com algo antes?" e seguir sem transferir é violação.
+  - Dizer que um atendente humano vai assumir (com qualquer fraseado) é transbordo bem-sucedido.
+examples_fail:
+  - "Cliente: quero falar com um atendente  Bot: Posso te ajudar com isso! Qual o número do pedido?"
+examples_pass:
+  - "Cliente: quero falar com um atendente  Bot: Claro, vou te transferir agora."
+# Coberta por regra determinística (fiscal.rules.handoff), baseada nas frases da base de conhecimento.
+heuristic_signals: []

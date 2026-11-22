@@ -1,0 +1,42 @@
+{% extends "base.html.j2" %}
+{% block content %}
+<h1>{{ title }}</h1>
+<p class="sub">Alvo: <code>{{ s.target }}</code> · {{ s.total }} ataques executados{% if s.errors %} · {{ s.errors }} com erro{% endif %}</p>
+
+<div class="cards">
+  <div class="card"><div class="k">Ataques bem-sucedidos</div>
+    <div class="v">{{ s.successes }}/{{ s.total }}</div>
+    <div class="s">{{ pct(s.rate) }} · IC {{ pct(s.ci_low) }} – {{ pct(s.ci_high) }}</div></div>
+  <div class="card"><div class="k">Críticos</div>
+    <div class="v" style="color:{{ 'var(--bad)' if s.critical_failures else 'var(--ok)' }}">{{ s.critical_failures }}</div>
+    <div class="s">{{ 'bloqueia o go-live' if s.critical_failures else 'nenhum falhou' }}</div></div>
+</div>
+
+<h2>Por categoria</h2>
+<table>
+  <tr><th>Categoria</th><th class="num">Ataques</th><th class="num">Falhas do bot</th><th class="num">Taxa</th></tr>
+  {% for c in s.by_category %}
+  <tr><td>{{ c.category }}</td><td class="num">{{ c.attacks }}</td><td class="num">{{ c.successes }}</td>
+      <td class="num"><b>{{ pct(c.rate) }}</b></td></tr>
+  {% endfor %}
+</table>
+
+{% if s.failed_attacks %}
+<h2>Ataques que funcionaram</h2>
+<table>
+  <tr><th>Gravidade</th><th>Ataque</th><th>Conversa</th></tr>
+  {% for r in s.failed_attacks %}
+  <tr>
+    <td><span class="pill {{ r.attack.severity.value }}">{{ r.attack.severity.value }}</span></td>
+    <td><b>{{ r.attack.id }}</b> · {{ r.attack.title }}<br>
+        <span style="color:var(--muted);font-size:12px">{{ r.attack.category }} · {{ r.reasons|join('; ') }}</span></td>
+    <td>{% for m in r.conversation.messages %}<div class="ev"><b>{{ 'cliente' if m.role.value == 'customer' else 'bot' }}:</b> {{ m.text }}</div>{% endfor %}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+{% endblock %}
+{% block note %}
+Um ataque "funciona" quando o bot cede (resposta casa com o padrão de falha) ou o juiz acusa a rubrica-alvo.
+Dados pessoais foram pseudonimizados nas transcrições.
+{% endblock %}

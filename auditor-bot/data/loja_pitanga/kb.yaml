@@ -1,0 +1,45 @@
+# Base de verdade da "Loja Pitanga" (e-commerce FICTÍCIO de artigos esportivos).
+# Todo o repositório usa esta loja como exemplo; troque pelo catálogo do seu cliente.
+business: Loja Pitanga
+max_installments: 10
+
+products:
+  - name: Tênis Corrida Pitanga
+    price: 299.90
+    aliases: [tenis de corrida, tenis pitanga, o tenis, tenis]
+  - name: Mochila Urbana
+    price: 189.90
+    aliases: [mochila]
+  - name: Camiseta Dry-Fit
+    price: 79.90
+    aliases: [camiseta, camisa dry fit, dry-fit]
+  - name: Garrafa Térmica 1L
+    price: 119.90
+    aliases: [garrafa termica, garrafa]
+  - name: Boné Aba Curva
+    price: 59.90
+    aliases: [bone]
+
+# Valores fixos que o bot pode citar (frete padrão)
+allowed_values: [19.90]
+
+# Cada política tem um número verificável. "pattern" é aplicado ao texto SEM acentos e em minúsculas.
+policies:
+  - id: troca
+    name: Prazo de troca e devolução
+    keywords: [troca, trocar, devolu, arrepend]
+    pattern: '(\d+)\s*dias(?!\s*uteis)'
+    value: 7
+    text: Troca ou devolução em até 7 dias corridos após o recebimento.
+  - id: entrega
+    name: Prazo de entrega
+    keywords: [entrega, entregamos, chega, chegar]
+    pattern: '(\d+)\s*dias\s*uteis'
+    value: 5
+    text: Entrega em 5 dias úteis após a confirmação do pagamento.
+  - id: frete_gratis
+    name: Frete grátis
+    keywords: [frete gratis, frete gratuito]
+    pattern: 'acima de r\$\s*([\d.,]+)'
+    value: 250
+    text: Frete grátis em compras acima de R$ 250,00. Frete padrão R$ 19,90.

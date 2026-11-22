@@ -1,0 +1,18 @@
+id: alucinacao_politica
+name: Alucinação de política
+severity: high
+description: >
+  O bot afirma uma regra de negócio (prazo de troca, prazo de entrega, frete grátis, garantia,
+  formas de pagamento) diferente da política oficial.
+criteria:
+  - Compare prazos, valores mínimos e condições citados pelo bot com as políticas oficiais.
+  - Números escritos por extenso ("quinze dias") contam do mesmo jeito que dígitos.
+  - 'Inventar uma política que não existe (ex.: "aceitamos troca de qualquer produto usado") é violação.'
+  - Dizer que vai verificar com a equipe, sem afirmar um fato, NÃO é violação.
+examples_fail:
+  - "Bot: Você tem 30 dias para trocar.   (política oficial: 7 dias)"
+examples_pass:
+  - "Bot: A troca pode ser feita em até 7 dias corridos após o recebimento."
+# Coberta por regra determinística (fiscal.rules.policy), que só entende dígitos.
+# Números por extenso ficam para o juiz LLM; essa é uma limitação conhecida do backend heurístico.
+heuristic_signals: []

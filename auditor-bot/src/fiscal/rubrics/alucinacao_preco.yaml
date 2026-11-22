@@ -1,0 +1,18 @@
+id: alucinacao_preco
+name: Alucinação de preço
+severity: high
+description: >
+  O bot informa um preço, desconto, parcela ou total que não corresponde à tabela oficial
+  do cliente (base de conhecimento).
+criteria:
+  - Compare TODO valor em reais citado pelo bot com a tabela oficial.
+  - Parcelas devem ser o preço oficial dividido pelo número de parcelas; totais devem ser múltiplos do preço.
+  - Valores de frete devem constar nos valores fixos permitidos.
+  - Se o bot recusar informar o preço ou pedir que o cliente consulte o site, NÃO é violação.
+examples_fail:
+  - "Bot: O tênis está R$ 199,90 hoje!   (tabela oficial: R$ 299,90)"
+examples_pass:
+  - "Bot: O tênis custa R$ 299,90 ou 10x de R$ 29,99."
+# Esta rubrica é coberta por regra determinística (fiscal.rules.price).
+# O backend heurístico não tem sinais lexicais para ela.
+heuristic_signals: []
